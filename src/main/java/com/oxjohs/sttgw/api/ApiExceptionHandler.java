@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -37,6 +38,18 @@ public class ApiExceptionHandler {
     ) {
         return ResponseEntity.badRequest()
             .body(ApiErrorResponse.of("VALIDATION_ERROR", exception.getMessage()));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleNoResourceFoundException(NoResourceFoundException exception) {
+        if ("favicon.ico".equals(exception.getResourcePath())) {
+            log.debug("favicon 리소스 요청 무시");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        log.warn("정적 리소스를 찾을 수 없습니다: path={}", exception.getResourcePath());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ApiErrorResponse.of("RESOURCE_NOT_FOUND", "요청한 리소스를 찾을 수 없습니다"));
     }
 
     @ExceptionHandler(Exception.class)
