@@ -25,6 +25,12 @@ public class CallSession {
     @Setter
     private volatile LocalDateTime endTime;
 
+    @Setter
+    private volatile String rxAudioPath;
+
+    @Setter
+    private volatile String txAudioPath;
+
     private final ConcurrentHashMap<Long, PcmBuffer> ssrcBuffers = new ConcurrentHashMap<>();
     private final AtomicInteger ssrcCount = new AtomicInteger(0);
 
