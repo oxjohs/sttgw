@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STTGateway Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body class="dashboard-page">
+<div class="page-shell">
+    <header class="page-header">
+        <div class="brand-block">
+            <p class="eyebrow">AICC Speech Operations</p>
+            <h1>STTGateway Dashboard</h1>
+            <p class="lede">실시간 통화 흐름과 STT 변환 상태를 관제실처럼 한 화면에서 추적합니다.</p>
+        </div>
+        <nav class="header-actions">
+            <a class="ghost-link" th:href="@{/settings}">STT 설정</a>
+            <div class="socket-chip" id="socket-chip" data-status="connecting">
+                <span class="socket-dot"></span>
+                <span id="socket-status-text">연결 준비중</span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="dashboard-grid">
+        <section class="hero-panel">
+            <div>
+                <p class="panel-kicker">실시간 상태</p>
+                <h2>활성 통화 <span id="call-count" th:text="${activeCount}">0</span>건</h2>
+                <p class="panel-copy">활성 세션은 WebSocket 이벤트로 즉시 반영되며, transcript 피드는 아래 영역에 순차적으로 누적됩니다.</p>
+            </div>
+            <div class="metric-stack">
+                <div class="metric-tile">
+                    <span class="metric-label">Active Sessions</span>
+                    <strong class="metric-value" id="active-count-value" th:text="${activeCount}">0</strong>
+                </div>
+                <div class="metric-tile accent">
+                    <span class="metric-label">Feed Mode</span>
+                    <strong class="metric-value">Realtime</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="surface-panel">
+            <div class="panel-header">
+                <div>
+                    <p class="panel-kicker">Sessions</p>
+                    <h2>진행 중 통화</h2>
+                </div>
+            </div>
+
+            <div id="active-call-list" class="call-list" th:classappend="${#lists.isEmpty(activeCalls)} ? ' empty' : ''">
+                <article class="call-row" th:each="call : ${activeCalls}" th:attr="data-call-id=${call.callId}">
+                    <div class="call-meta">
+                        <p class="call-id" th:text="${call.callId}">call-id</p>
+                        <p class="call-subline">
+                            <span th:text="${call.callerNumber}">caller</span>
+                            <span class="dot-separator">•</span>
+                            <span th:text="${call.agentExtension}">agent</span>
+                        </p>
+                    </div>
+                    <div class="call-state">
+                        <span class="state-pill" th:text="${call.state}">CONNECTED</span>
+                    </div>
+                </article>
+                <div class="empty-state" id="call-empty-state" th:if="${#lists.isEmpty(activeCalls)}">
+                    실시간 세션이 들어오면 여기에 즉시 표시됩니다.
+                </div>
+            </div>
+        </section>
+
+        <section class="surface-panel transcript-panel">
+            <div class="panel-header">
+                <div>
+                    <p class="panel-kicker">Streaming Feed</p>
+                    <h2>실시간 STT 변환 결과</h2>
+                </div>
+            </div>
+
+            <div id="transcript-container" class="transcript-stream">
+                <div class="empty-state transcript-empty" id="transcript-empty-state">
+                    아직 수신된 transcript 이벤트가 없습니다.
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script th:src="@{/js/websocket-client.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
