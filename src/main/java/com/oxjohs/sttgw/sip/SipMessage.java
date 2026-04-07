@@ -15,7 +15,11 @@ public class SipMessage {
     private String callId;
     private String fromUri;
     private String toUri;
+    private String fromTag;
+    private String toTag;
     private Integer mediaPort;
+    private String mediaIp;
+    private String codec;
 
     @Builder.Default
     private Map<String, String> headers = new LinkedHashMap<>();
