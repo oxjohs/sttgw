@@ -48,6 +48,7 @@ logs/
 .env
 .env.*
 *.local
+/.local/
 src/main/resources/application-local.yml
 src/main/resources/application-*.local.yml
 

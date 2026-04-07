@@ -6,3 +6,13 @@ sttgw:
   capture:
     enabled: false
     dump-enabled: false
+    interface-name: eth3
+    snap-len: 65536
+    timeout-millis: 10
+    bpf-filter: udp
+  audio:
+    retention-days: 30
+  stt:
+    default-vendor: GOOGLE
+    default-language: ko-KR
+    streaming-enabled: true

@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:/APP_DATA/db/sttgw;MODE=LEGACY;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  thymeleaf:
+    cache: true
+
+sttgw:
+  capture:
+    enabled: true
+    interface-name: eth3
+    dump-path: /APP_DATA/DUMP
+    dump-enabled: false
+  audio:
+    base-path: /APP_DATA/audio
+    retention-days: 30
+  stt:
+    google:
+      credential-path: /APP/sttgw/credentials/google-stt-key.json
+      streaming-buffer-ms: 200
+
+logging:
+  file:
+    path: /APP_LOGS/sttgw
+    name: /APP_LOGS/sttgw/sttgw.log
+  level:
+    root: INFO
+    com.oxjohs.sttgw: INFO
