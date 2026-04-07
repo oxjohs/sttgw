@@ -230,6 +230,7 @@ body {
     border-radius: var(--round-lg);
     background: var(--panel-strong);
     border: 1px solid var(--panel-line);
+    min-width: 0;
 }
 
 .metric-tile.accent {
@@ -248,6 +249,14 @@ body {
 .metric-value {
     font-size: clamp(1.6rem, 2vw, 2.4rem);
     letter-spacing: -0.04em;
+    line-height: 1.08;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.metric-value--compact {
+    font-size: clamp(1.2rem, 1.7vw, 2rem);
+    letter-spacing: -0.03em;
 }
 
 .call-list {
