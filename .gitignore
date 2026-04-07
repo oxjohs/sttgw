@@ -1,0 +1,72 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+out/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Logs ###
+*.log
+logs/
+
+### Local Environment ###
+.env
+.env.*
+*.local
+src/main/resources/application-local.yml
+src/main/resources/application-*.local.yml
+
+### Local Database ###
+*.mv.db
+*.h2.db
+*.trace.db
+
+### JVM ###
+hs_err_pid*
+replay_pid*
+
+### Credentials ###
+credentials/
+*google-stt-key*.json
+
+### Generated Audio / Capture ###
+*.pcap
+*.wav
+dump/
+audio/
+tmp/
