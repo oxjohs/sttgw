@@ -67,6 +67,6 @@ credentials/
 ### Generated Audio / Capture ###
 *.pcap
 *.wav
-dump/
-audio/
-tmp/
+/dump/
+/audio/
+/tmp/
