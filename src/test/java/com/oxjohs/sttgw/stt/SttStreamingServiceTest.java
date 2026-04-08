@@ -6,12 +6,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.oxjohs.sttgw.domain.SttTranscript;
+import com.oxjohs.sttgw.domain.CallRecord;
+import com.oxjohs.sttgw.repository.CallRecordRepository;
 import com.oxjohs.sttgw.repository.SttTranscriptRepository;
 import com.oxjohs.sttgw.session.CallSession;
 import com.oxjohs.sttgw.websocket.SttWebSocketHandler;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -27,11 +30,13 @@ class SttStreamingServiceTest {
         FakeStreamingSession fakeStreamingSession = new FakeStreamingSession();
         FakeAdapter adapter = new FakeAdapter(fakeStreamingSession);
         SttAdapterFactory adapterFactory = new SttAdapterFactory(List.of(adapter), properties);
+        CallRecordRepository callRecordRepository = Mockito.mock(CallRecordRepository.class);
         SttTranscriptRepository transcriptRepository = Mockito.mock(SttTranscriptRepository.class);
         SttWebSocketHandler webSocketHandler = Mockito.mock(SttWebSocketHandler.class);
+        when(callRecordRepository.findByCallId("call-1")).thenReturn(Optional.of(new CallRecord()));
 
         SttStreamingService service = new SttStreamingService(
-            adapterFactory, properties, transcriptRepository, webSocketHandler
+            adapterFactory, properties, callRecordRepository, transcriptRepository, webSocketHandler
         );
 
         CallSession callSession = new CallSession("call-1", "01012345678", "1001", LocalDateTime.now());
@@ -64,11 +69,12 @@ class SttStreamingServiceTest {
         FakeStreamingSession fakeStreamingSession = new FakeStreamingSession();
         FakeAdapter adapter = new FakeAdapter(fakeStreamingSession);
         SttAdapterFactory adapterFactory = new SttAdapterFactory(List.of(adapter), properties);
+        CallRecordRepository callRecordRepository = Mockito.mock(CallRecordRepository.class);
         SttTranscriptRepository transcriptRepository = Mockito.mock(SttTranscriptRepository.class);
         SttWebSocketHandler webSocketHandler = Mockito.mock(SttWebSocketHandler.class);
 
         SttStreamingService service = new SttStreamingService(
-            adapterFactory, properties, transcriptRepository, webSocketHandler
+            adapterFactory, properties, callRecordRepository, transcriptRepository, webSocketHandler
         );
 
         CallSession callSession = new CallSession("call-2", "01000000000", "2002", LocalDateTime.now());

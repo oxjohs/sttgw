@@ -3,6 +3,7 @@ package com.oxjohs.sttgw.session;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -62,8 +63,8 @@ class CallSessionManagerTest {
         assertThat(manager.getActiveSessionCount()).isZero();
 
         ArgumentCaptor<CallRecord> captor = ArgumentCaptor.forClass(CallRecord.class);
-        verify(callRecordRepository).save(captor.capture());
-        CallRecord saved = captor.getValue();
+        verify(callRecordRepository, atLeast(2)).save(captor.capture());
+        CallRecord saved = captor.getAllValues().get(captor.getAllValues().size() - 1);
         assertThat(saved.getCallId()).isEqualTo("call-1234");
         assertThat(saved.getState()).isEqualTo(CallState.COMPLETED);
         assertThat(saved.getDurationSec()).isEqualTo(0);
@@ -80,8 +81,9 @@ class CallSessionManagerTest {
         manager.onCallCancel(cancelMessage());
 
         ArgumentCaptor<CallRecord> captor = ArgumentCaptor.forClass(CallRecord.class);
-        verify(callRecordRepository).save(captor.capture());
-        assertThat(captor.getValue().getState()).isEqualTo(CallState.CANCELLED);
+        verify(callRecordRepository, atLeast(2)).save(captor.capture());
+        CallRecord saved = captor.getAllValues().get(captor.getAllValues().size() - 1);
+        assertThat(saved.getState()).isEqualTo(CallState.CANCELLED);
     }
 
     @Test

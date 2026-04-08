@@ -21,6 +21,7 @@ sttgw:
   capture:
     enabled: true
     interface-name: eth3
+    bpf-filter: host 211.192.89.43 and udp
     dump-path: /APP_DATA/DUMP
     dump-enabled: false
   audio:

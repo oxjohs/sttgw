@@ -47,6 +47,7 @@ public class CallSessionManager {
             portToCallId.put(message.getMediaPort(), message.getCallId());
         }
 
+        saveOrUpdateCallRecord(session);
         listeners.forEach(listener -> listener.onSessionCreated(session));
         log.info("통화 세션 생성: callId={}, caller={}", message.getCallId(), message.getFromUri());
     }
@@ -103,7 +104,7 @@ public class CallSessionManager {
         portToCallId.entrySet().removeIf(entry -> message.getCallId().equals(entry.getValue()));
 
         listeners.forEach(listener -> listener.onSessionCompleted(session));
-        saveCallRecord(session);
+        saveOrUpdateCallRecord(session);
 
         long durationSec = session.getEndTime() == null
             ? 0L
@@ -112,9 +113,14 @@ public class CallSessionManager {
             message.getCallId(), targetState, durationSec);
     }
 
-    private void saveCallRecord(CallSession session) {
-        CallRecord callRecord = new CallRecord();
-        callRecord.setCallId(session.getCallId());
+    private void saveOrUpdateCallRecord(CallSession session) {
+        CallRecord callRecord = callRecordRepository.findByCallId(session.getCallId())
+            .orElseGet(CallRecord::new);
+
+        if (callRecord.getId() == null) {
+            callRecord.setCallId(session.getCallId());
+        }
+
         callRecord.setCallerNumber(session.getCallerNumber());
         callRecord.setAgentExtension(session.getAgentExtension());
         callRecord.setStartTime(session.getStartTime());

@@ -1,6 +1,7 @@
 package com.oxjohs.sttgw.stt;
 
 import com.oxjohs.sttgw.domain.SttTranscript;
+import com.oxjohs.sttgw.repository.CallRecordRepository;
 import com.oxjohs.sttgw.repository.SttTranscriptRepository;
 import com.oxjohs.sttgw.session.CallSession;
 import com.oxjohs.sttgw.session.SessionEventListener;
@@ -23,6 +24,7 @@ public class SttStreamingService implements SessionEventListener {
 
     private final SttAdapterFactory sttAdapterFactory;
     private final SttProperties sttProperties;
+    private final CallRecordRepository callRecordRepository;
     private final SttTranscriptRepository sttTranscriptRepository;
     private final SttWebSocketHandler sttWebSocketHandler;
 
@@ -108,6 +110,10 @@ public class SttStreamingService implements SessionEventListener {
 
     private void onSttResult(String callId, String channel, String vendor, SttResult result) {
         if (result == null || result.getTranscript() == null || result.getTranscript().isBlank()) {
+            return;
+        }
+        if (callRecordRepository.findByCallId(callId).isEmpty()) {
+            log.debug("CALL_RECORD 미생성 상태로 transcript 저장 생략: callId={}", callId);
             return;
         }
 
